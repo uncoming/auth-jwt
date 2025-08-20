@@ -19,7 +19,7 @@ public class AuthController {
 	@PostMapping("/login")
 	public ResponseEntity<String> login(@RequestBody LoginRequest request, HttpServletRequest httpRequest){
 		logger.info("Login attempt by user: {} from IP: {}", request.getUsername(), httpRequest.getRemoteAddr());
-		String token = authService.generateToken(request.getUsername());
+		String token = authService.generateToken(request);
 		return ResponseEntity.ok(token);
 	}
 	
