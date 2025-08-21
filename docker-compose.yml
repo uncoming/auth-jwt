@@ -1,0 +1,31 @@
+version: '2.39.1'
+
+services:
+  auth-jwt-db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: devuser
+      POSTGRES_PASSWORD: devpass
+      POSTGRES_DB: devdb
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  auth-jwt-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "5000:8080"
+    depends_on:
+      - auth-jwt-db
+    environment:
+      AUTH_JWT_DATABASE_URL: jdbc:postgresql://auth-jwt-db:5432/devdb
+      AUTH_JWT_DATABASE_USERNAME: devuser
+      AUTH_JWT_DATABASE_PASSWORD: devpass
+
+volumes:
+  pgdata:
