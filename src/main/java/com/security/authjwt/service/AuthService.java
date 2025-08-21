@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import com.security.authjwt.dto.LoginRequest;
-import com.security.authjwt.entity.User;
 import com.security.authjwt.repository.IUserRepository;
 
 import java.security.Key;
@@ -28,14 +27,17 @@ public class AuthService {
 	}
 	
 	public String generateToken(LoginRequest login) {
-		User user = userRepository.getByUsername(login.getUsername());
-		if(user == null || !login.getPassword().equals(user.getPassword())){
+		
+		var userOpt = userRepository.getByUsername(login.getUsername());
+
+		if(!userOpt.isPresent() || !userOpt.get().getPassword().equals(login.getPassword())) {
 			return "Credenciales invalidas.";
 		}
+
 		return Jwts.builder()
 				.setSubject(login.getUsername())
 				.setIssuedAt(new Date())
-				.setExpiration(new Date(System.currentTimeMillis()+60000))
+				.setExpiration(new Date(System.currentTimeMillis()+3600000)) // 1 hora
 				.signWith(getSigningKey(), SignatureAlgorithm.HS256)
 				.compact();
 	}
