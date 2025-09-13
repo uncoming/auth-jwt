@@ -12,6 +12,8 @@ services:
       - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - auth-jwt-net
 
   auth-jwt-app:
     build:
@@ -23,9 +25,16 @@ services:
     depends_on:
       - auth-jwt-db
     environment:
+      SPRING_PROFILES_ACTIVE: docker
       AUTH_JWT_DATABASE_URL: jdbc:postgresql://auth-jwt-db:5432/devdb
       AUTH_JWT_DATABASE_USERNAME: devuser
       AUTH_JWT_DATABASE_PASSWORD: devpass
+    networks:
+      - auth-jwt-net
 
 volumes:
   pgdata:
+
+networks:
+  auth-jwt-net:
+    driver: bridge
