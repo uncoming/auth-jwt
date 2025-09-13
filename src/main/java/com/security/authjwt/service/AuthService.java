@@ -9,7 +9,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import com.security.authjwt.dto.LoginRequest;
+
 import com.security.authjwt.repository.IUserRepository;
+import com.security.authjwt.entity.User;
+import java.util.List;
+
 
 import java.security.Key;
 import java.util.Date;
@@ -24,6 +28,17 @@ public class AuthService {
 	
 	private Key getSigningKey() {
 		return Keys.hmacShaKeyFor(SECRET.getBytes());
+	}
+
+	public User registerUser(User user) {
+		if (userRepository.getByUsername(user.getUsername()).isPresent()) {
+			throw new IllegalArgumentException("El usuario ya existe");
+		}
+		return userRepository.save(user);
+	}
+
+	public List<User> getAllUsers() {
+		return userRepository.findAll();
 	}
 	
 	public String generateToken(LoginRequest login) {
