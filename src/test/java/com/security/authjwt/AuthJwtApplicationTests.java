@@ -1,7 +1,6 @@
 package com.security.authjwt;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 //@SpringBootTest
 class AuthJwtApplicationTests {
@@ -18,7 +17,7 @@ class AuthJwtApplicationTests {
 		mockUser.setPassword("testpass");
 
 		com.security.authjwt.repository.IUserRepository userRepository = org.mockito.Mockito.mock(com.security.authjwt.repository.IUserRepository.class);
-		org.mockito.Mockito.when(userRepository.getByUsername("testuser")).thenReturn(mockUser);
+		org.mockito.Mockito.when(userRepository.getByUsername("testuser")).thenReturn(java.util.Optional.of(mockUser));
 
 		com.security.authjwt.service.AuthService service = new com.security.authjwt.service.AuthService(userRepository);
 
